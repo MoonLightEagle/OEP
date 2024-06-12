@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100">
+<div class="max-w-md w-full bg-white shadow-md rounded-lg p-8">
+    <h2 class="text-2xl font-bold mb-6 text-center">User Registration</h2>
+    <form id="userForm" class="space-y-4">
+        <input type="text" id="firstName" name="firstName" placeholder="First Name" required class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <input type="text" id="lastName" name="lastName" placeholder="Last Name" required class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <input type="email" id="email" name="email" placeholder="Email" required class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <input type="password" id="password" name="password" placeholder="Password" required class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Repeat Password" required class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <input type="text" id="address" name="address" placeholder="Address" class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <button type="submit" class="w-full py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600">Register</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('userForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            repeatPassword: document.getElementById('repeatPassword').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            address: document.getElementById('address').value
+        };
+
+        fetch('http://localhost:8080/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                response.json()
+                console.log(response.json())
+            })
+            .then(data => {
+                document.cookie = `authorization=${data.tokenResponse.token}`;
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+</body>
+</html>
